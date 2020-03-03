@@ -1,7 +1,7 @@
 # 本文档是学习cosmos出块的记录
 
 ## 相关函数的调用顺序
-![Image text]([./filecoin_blockout.png](https://github.com/xuyp1991/cosmoslearnrecord/blob/master/tendermint/blockout/tendmint_blockout.png))
+![Image text]([https://github.com/xuyp1991/cosmoslearnrecord/blob/master/tendermint/blockout/tendmint_blockout.png])
 
 ## 相关函数的说明
 
