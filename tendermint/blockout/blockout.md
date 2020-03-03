@@ -99,7 +99,7 @@ proposal := types.NewProposal(height, round, cs.ValidRound, propBlockId)//round�
 
 CreateProposalBlock调用state.MakeBlock，其中包含来自evpool的证据和来自mempool的txs。 最大字节数必须足够大以适合提交。 为了最大尺寸的证据，最多对块空间的1/10进行了涂层。 其余的给txs，直到gas。
 
-###　MakeBlock
+### MakeBlock
 
 MakeBlock使用给定的tx，提交和证据从当前状态构建一个块．
 
