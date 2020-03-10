@@ -117,7 +117,7 @@ AllocateTokensToValidator函数分配奖励给一个地址,奖励分2个部分�
     k.SetValidatorOutstandingRewards(ctx, val.GetOperator(), outstanding)
 ```
 
-### 分配奖励给投票人
+### 分配奖励给其他BP  bonded validators
 
 ```allocation.go
  // calculate fraction allocated to validators计算分配给验证者的分数
@@ -125,7 +125,7 @@ AllocateTokensToValidator函数分配奖励给一个地址,奖励分2个部分�
     voteMultiplier := sdk.OneDec().Sub(proposerMultiplier).Sub(communityTax)
 
     // allocate tokens proportionally to voting power
-    // TODO consider parallelizing later, ref https://github.com/cosmos/cosmos-sdk/pull/3099#discussion_r246276376  给投票人分配
+    // TODO consider parallelizing later, ref https://github.com/cosmos/cosmos-sdk/pull/3099#discussion_r246276376  给验证人分配
     for _, vote := range previousVotes {
         validator := k.stakingKeeper.ValidatorByConsAddr(ctx, vote.Validator.Address)
 
@@ -138,9 +138,9 @@ AllocateTokensToValidator函数分配奖励给一个地址,奖励分2个部分�
     }
 ```
 
-这里一个投票者能分配到的奖励是  reward = total_reward * (1-给社区的比例-给BP的比例)*(投票数/总投票数)
+这里一个验证人能分配到的奖励是  reward = total_reward * (1-给社区的比例-给BP的比例)*(投票数/总投票数)
 
-通过函数AllocateTokensToValidator将奖金分配给voter
+通过函数AllocateTokensToValidator将奖金分配给验证人
 
 ### 分配奖励给社区
 
