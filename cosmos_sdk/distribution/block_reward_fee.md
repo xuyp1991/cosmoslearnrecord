@@ -58,7 +58,7 @@ AllocateTokens函数是分配奖励的具体函数,首先看一下它的入参
     feesCollected := sdk.NewDecCoinsFromCoins(feesCollectedInt...)
 ```
 
-由代码可知从feeCollectorName这个账户的地址上面获取所有的代币
+由代码可知从feeCollectorName这个账户的地址上面获取所有的代币,这个代币准确来说是增发的代币,不是 收集费用得到的代币
 
 ### 分配奖励给BP
 
