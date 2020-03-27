@@ -11,7 +11,7 @@
 在Cosmos SDK中,`gas`是一种特殊的单位,用于跟踪执行期间的资源消耗.每当对储存进行读写操作的时候会消耗`gas`,如果要进行比较复杂的计算的话也会消耗`gas`.它主要有两个目的:
 
 - 确保区块不会消耗太多资源而且能顺利完成.这个默认在SDK的 [block gas meter](#block-gas-meter)中保证
-- 防止来自终端用户的垃圾邮件和调用.为此,通常会为[`message`](../building-modules/messages-and-queries.md#messages)执行期间的消耗进行定价,并产生`fee` (`fees = gas * gas-prices`).`fees` 通常必须由`message`的发送者来支付.请注意,SDK并没有强制执行对`gas`定价,因为可能会有其他的方法来防止垃圾邮件(例如带宽方案).尽管如此,大多数应用程序仍然会使用`fee` 方式来防止垃圾邮件.这个机制通过[`AnteHandler`](#antehandler)来完成.
+- 防止来自终端用户的垃圾邮件和滥用.为此,通常会为[`message`](../building-modules/messages-and-queries.md#messages)执行期间的消耗进行定价,并产生`fee` (`fees = gas * gas-prices`).`fees` 通常必须由`message`的发送者来支付.请注意,SDK并没有强制执行对`gas`定价,因为可能会有其他的方法来防止垃圾邮件(例如带宽方案).尽管如此,大多数应用程序仍然会使用`fee` 方式来防止垃圾邮件.这个机制通过[`AnteHandler`](#antehandler)来完成.
 
 ##  Gas Meter
 
@@ -48,7 +48,7 @@ ctx.GasMeter().ConsumeGas(amount, "description")
 
 +++ https://github.com/tendermint/tendermint/blob/f323c80cb3b78e123ea6238c8e136a30ff749ccc/types/params.go#L65-L72 
 
-当通过`DeliverTx`处理新的[transaction](../core/transactions.md)的时候,`BlockGasMeter`的当前值会被校验是否超过上限,如果超过上限,`DeliverTx` 直接返回,由于`BeginBlock`会消耗`gas`,这种情况会在第一个`transaction`到来时发生,如果没有发生这种情况,`transaction`将会被正常的执行.在`DeliverTx`的最后,`ctx.BlockGasMeter()`会追踪`gas`消耗并将它增加处理`transaction`的`gas`消耗中.
+当通过`DeliverTx`处理新的[transaction](../core/transactions.md)的时候,`BlockGasMeter`的当前值会被校验是否超过上限,如果超过上限,`DeliverTx` 直接返回,由于`BeginBlock`会消耗`gas`,这种情况可能会在第一个`transaction`到来时发生,如果没有发生这种情况,`transaction`将会被正常的执行.在`DeliverTx`的最后,`ctx.BlockGasMeter()`会追踪`gas`消耗并将它增加到处理`transaction`的`gas`消耗中.
 
 ```go
 ctx.BlockGasMeter().ConsumeGas(
