@@ -9,11 +9,14 @@
 ./kucli keys add jack
 ./kucli keys add alice
 
+
+
+
 ./kucd init --chain-id=testing testing
-./kucd add-genesis-account $(./kucli keys show validator -a) 1000000000stake,1000000000validatortoken
-./kucd add-genesis-account $(./kucli keys show jack -a) 1000000000stake,1000000000validatortoken
-./kucd add-genesis-account $(./kucli keys show alice -a) 1000000000stake,1000000000validatortoken
-./kucd gentx --name validator
+./kucd add-genesis-account $(./kucli keys show validator -a) 10000000000000000stake,1000000000validatortoken
+./kucd add-genesis-account $(./kucli keys show jack -a) 10000000000000000stake,1000000000validatortoken
+./kucd add-genesis-account $(./kucli keys show alice -a) 10000000000000000stake,1000000000validatortoken
+./kucd gentx kuchain14f5d7f8u0e5xpgh0ty3ykflgyt7jepxlfchwnu  --name validator
 ./kucd collect-gentxs
 
 ./kucli config chain-id testing
@@ -61,7 +64,7 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 ## 在kustaking上面注册节点
 
 ```bash
-./kucli tx kustaking create-validator \
+./kucli tx kustaking create-validator jack \
   --amount=5stake \
   --pubkey=$(./kucd tendermint show-validator --home /home/xuyapeng/go_workspace/src/github.com/KuChain-io/data/kucddata2) \
   --moniker="jack test" \
@@ -73,7 +76,7 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 将第一个节点注册为节点
 
 ```bash
-./kucli tx kustaking create-validator \
+./kucli tx kustaking create-validator kuchain16xlk6uf0ccsuh3zdff4lwpcafh7k6h6d6hzehk\
   --amount=5stake \
   --pubkey=$(./kucd tendermint show-validator --home /home/xuyapeng/go_workspace/src/github.com/KuChain-io/data/kucddata1) \
   --moniker="secode test" \
@@ -84,16 +87,26 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 
 将第二个节点注册为节点
 
+## 修改节点信息
+
+```bash
+./kucli tx kustaking  edit-validator  kuchain16xlk6uf0ccsuh3zdff4lwpcafh7k6h6d6hzehk   --commission-rate="0.20"  --from=alice
+```
+
+
 ## 投票
 
 ```bash
-./kucli tx kustaking delegate kuchainvaloper19674cxa9s6wl77scgj0nh445s3eqstwtgul259 55000000stake --from jack
-./kucli tx kustaking delegate kuchainvaloper19674cxa9s6wl77scgj0nh445s3eqstwtgul259 56000000stake --from alice
+./kucli tx kustaking delegate validator 5500stake --from jack
+./kucli tx kustaking delegate kuchain16xlk6uf0ccsuh3zdff4lwpcafh7k6h6d6hzehk 5600stake --from alice
+./kucli tx kustaking delegate kuchain16xlk6uf0ccsuh3zdff4lwpcafh7k6h6d6hzehk 40000000stake --from jack
 
-./kucli tx kustaking delegate kuchainvaloper16xlk6uf0ccsuh3zdff4lwpcafh7k6h6du64xs0 155000000stake --from jack
+kuchain16xlk6uf0ccsuh3zdff4lwpcafh7k6hccrez08
+
+./kucli tx kustaking delegate kuchainvaloper16xlk6uf0ccsuh3zdff4lwpcafh7k6h6du64xs0 200000000stake --from jack
 ./kucli tx kustaking delegate kuchainvaloper16xlk6uf0ccsuh3zdff4lwpcafh7k6h6du64xs0 156000000stake --from alice
 
-./kucli tx kustaking delegate kuchainvaloper1hgc32us5222xq35nfq3zcm8ysz6qj0cfsry0ut 155000000stake --from jack
+./kucli tx kustaking delegate kuchainvaloper1hgc32us5222xq35nfq3zcm8ysz6qj0cfsry0ut 100000000stake --from jack
 ./kucli tx kustaking delegate kuchainvaloper1hgc32us5222xq35nfq3zcm8ysz6qj0cfsry0ut 156000000stake --from alice
 
 ```
@@ -115,6 +128,7 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 ## 转投
 
 ```bash
+./kucli tx kustaking redelegate jack validator 300stake --from alice
 ./kucli tx kustaking redelegate kuchainvaloper19674cxa9s6wl77scgj0nh445s3eqstwtgul259 kuchainvaloper16xlk6uf0ccsuh3zdff4lwpcafh7k6h6du64xs0 300stake --from alice
 ```
 
@@ -123,7 +137,7 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 ## 取消投票
 
 ```bash
-./kucli tx kustaking unbond  kuchainvaloper19674cxa9s6wl77scgj0nh445s3eqstwtgul259 100stake --from alice
+./kucli tx kustaking unbond  validator 100stake --from alice
 ```
 
 ## 查询取消的投票
@@ -141,13 +155,14 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 ## 因为漏块而关小黑屋的解救命令
 
 ```bash
- ./kucli tx kuslashing unjail --from jack
+ ./kucli tx kuslashing unjail --from alice
 ```
 
 ## 在kuchain 上进行提案
 
 ```bash
-./kucli tx kugov submit-proposal --title "jack for test" --description "test test test" --deposit 500000000stake --type text  --from jack
+./kucli tx kugov submit-proposal --title "jack for test" --description "test test test" --deposit 100000000stake --type text  --from alice
+./kucli tx kugov deposit 3 500000000stake --from jack
 ```
 
 ##  查看所有提案
@@ -159,9 +174,13 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 ##  同意提案
 
 ```bash
-./kucli tx kugov vote 1 yes --from validator
-./kucli tx kugov vote 1 yes --from alice
+./kucli tx kugov vote 3 yes --from validator
+./kucli tx kugov vote 5 abstain --from alice
+./kucli tx kugov vote 2 yes --from jack
 
+
+./kucli tx kugov vote 2 yes --from validator
+./kucli tx kugov vote 3 yes --from validator
 
 ./kucli tx kugov vote 6 yes --from alice
 ./kucli tx kugov vote 6 yes --from validator
@@ -173,8 +192,19 @@ persistent_peers="7ff250764dde19bfccf4c6301a22cae2dba5d241@127.0.0.1:26656"
 ./kucli query kugov votes 1
 ```
 
+## 修改参数的提案
 
+```bash
+./kucli tx kugov submit-proposal param-change   "./proposal.json" --from jack
 
+./kucli tx kugov submit-proposal param-change   "./slashproposal.json" --from jack
+
+./kucli tx kugov submit-proposal param-change   "./proposalevidence.json" --from jack
+
+./kucli tx kugov submit-proposal param-change   "./mintproposal.json" --from jack
+
+./kucli tx kugov submit-proposal param-change   "./govproposal.json" --from jack
+```
 
 
 
